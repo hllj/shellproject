@@ -6,6 +6,10 @@ void parse(int *nparameter, int *concurrent, char *line, char **argv);
 
 void execute(int *nparamter, int *concurrent, char **argv);
 
+void saveHistoryBuff(char *historybuff, char* line);
+
+void executeHistoryBuff(char *historybuff);
+
 void runshell();
 
 // Trim a string

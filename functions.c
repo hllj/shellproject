@@ -78,22 +78,48 @@ char *trim(char *str, const char *seps) {
     return ltrim(rtrim(str, seps), seps);
 }
 
+void saveHistoryBuff(char *historybuff, char *line) {
+    strcpy(historybuff, line);
+}
+
+void executeHistoryBuff(char *historybuff) {
+    int nparameter;
+    int concurrent;
+    char  *argv[MAXLINE / 2 + 1];
+    if (strcmp(historybuff, "NULL") == 0) {
+        printf("No commands in history.");
+        return;
+    }
+    parse(&nparameter, &concurrent, historybuff, argv);
+    execute(&nparameter, &concurrent, argv);
+    return; 
+}
+
 void runshell() {
     int nparameter;
     int concurrent;
     char  line[MAXLINE];            // Line of command
+    char  buffline[MAXLINE];        // Save a line
     char  *argv[MAXLINE / 2 + 1];   // argument list
+    char historybuff[MAXLINE];
+    strcpy(historybuff, "NULL");
     int run = 1;
     while (run) {
         concurrent = 0;
         printf("osh>");
         gets(line);                 // Read a line of command              
         trim(line, NULL);
+        strcpy(buffline, line);     // Save another line command before parsed into argv
         printf("\n");       
         // Parse into a list of arguments delimited by space     
-        parse(&nparameter, &concurrent, line, argv);          
+        parse(&nparameter, &concurrent, line, argv);
+        if (strcmp(argv[0], "!!") == 0) {
+            executeHistoryBuff(historybuff);
+            continue;
+        }          
         if (strcmp(argv[0], "exit") == 0) //Hit exit
             exit(0);            
         execute(&nparameter, &concurrent, argv);              // Execute an command
+        saveHistoryBuff(historybuff, buffline);
     }
 }
