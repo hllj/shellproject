@@ -198,8 +198,8 @@ void saveHistoryBuff(char *historybuff, char *line) {
 
 void executeHistoryBuff(char *historybuff) {
     int nparameter;
-    int concurrent;
-    int pos;
+    int concurrent = 0;
+    int pos = -1;
     char  *argv[MAXLINE / 2 + 1];
     if (strcmp(historybuff, "NULL") == 0) {
         printf("No commands in history.");
