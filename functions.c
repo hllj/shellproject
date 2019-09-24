@@ -43,32 +43,35 @@ void execute(int *nparameter, int *concurrent, char **argv, int pos)
         else {
             if (strcmp(argv[pos],">") == 0)
             {
+                int i;
                 char *new_argv[MAXLINE/2+2];
-                for (int i = 0; i<pos ;i++)
+                for ( i = 0; i<pos ;i++)
                 {
                     new_argv[i] = malloc(strlen(argv[i]) + 1);
                     strcpy(new_argv[i],argv[i]);
                 }
                 new_argv[pos] = '\0';
-                int fd = open(argv[pos+1] , O_WRONLY | O_CREAT | O_TRUNC);
+                int fd = open(argv[pos+1] , O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
                 dup2(fd,1);
                 close(fd);
-                if (execvp(*new_argv, new_argv) < 0) {     
+                if (execvp(*new_argv, new_argv) < 0) {  
+                    int i;   
                     printf("*** ERROR: exec failed\n");
-                    for (int i = 0; i<pos ;i++)
+                    for ( i = 0; i<pos ;i++)
                     {
                         free(new_argv[i]);
                     }
                     exit(1);
                 }
-                for (int i = 0; i<pos ;i++)
+                for ( i = 0; i<pos ;i++)
                 {
                     free(new_argv[i]);
                 }
             }else if (strcmp(argv[pos],"<") == 0)
             {
+                int i;
                 char *new_argv[MAXLINE/2+2];
-                for (int i = 0; i<pos ;i++)
+                for (i = 0; i<pos ;i++)
                 {
                     new_argv[i] = malloc(strlen(argv[i]) + 1);
                     strcpy(new_argv[i],argv[i]);
@@ -79,28 +82,31 @@ void execute(int *nparameter, int *concurrent, char **argv, int pos)
                 close(fd);
                 if (execvp(*new_argv, new_argv) < 0) {     
                     printf("*** ERROR: exec failed\n");
-                    for (int i = 0; i<pos ;i++)
+                    int i; 
+                    for ( i = 0; i<pos ;i++)
                     {
                         free(new_argv[i]);
                     }
                     exit(1);
                 }
-                for (int i = 0; i<pos ;i++)
+                for ( i = 0; i<pos ;i++)
                 {
                     free(new_argv[i]);
                 }
             }else if (strcmp(argv[pos],"|") == 0)
             {
+                
                 int pfd[2];
                 pipe(pfd);
                 int cpid;
                 cpid = fork();
                 if (cpid == 0)
                 {
+                    int i;
                     close(pfd[0]);
                     dup2(pfd[1],1);
                     char *new_argv[MAXLINE/2+2];
-                    for (int i = 0; i<pos ;i++)
+                    for ( i = 0; i<pos ;i++)
                     {
                         new_argv[i] = malloc(strlen(argv[i]) + 1);
                         strcpy(new_argv[i],argv[i]);
@@ -108,7 +114,7 @@ void execute(int *nparameter, int *concurrent, char **argv, int pos)
                     new_argv[pos] = '\0';
                     if (execvp(*new_argv, new_argv) < 0) {     
                     printf("*** ERROR: exec failed\n");
-                    for (int i = 0; i<pos ;i++)
+                    for (i = 0; i<pos ;i++)
                     {
                         free(new_argv[i]);
                     }
@@ -123,7 +129,8 @@ void execute(int *nparameter, int *concurrent, char **argv, int pos)
                     wait(&stt);
                     close(pfd[1]);
                     dup2(pfd[0],0);
-                    for (int i = pos +1; i<*nparameter ;i++)
+                    int i;
+                    for ( i = pos +1; i<*nparameter ;i++)
                     {
                         new_argv[i-pos-1] = malloc(strlen(argv[i]) + 1);
                         strcpy(new_argv[i-pos-1],argv[i]);
@@ -131,7 +138,7 @@ void execute(int *nparameter, int *concurrent, char **argv, int pos)
                     new_argv[*nparameter- pos-1] = '\0';
                     if (execvp(*new_argv, new_argv) < 0) {     
                     printf("*** ERROR: exec failed1\n");
-                    for (int i = 0; i<*nparameter- pos-1;i++)
+                    for (i = 0; i<*nparameter- pos-1;i++)
                     {
                         free(new_argv[i]);
                     }
@@ -236,9 +243,3 @@ void runshell() {
     }
 }
 
-void print_arguments(int *nparameter, int *concurrent, char *line, char **argv, int *pos) {
-    for (int i = 0; i < *nparameter; i++) {
-        printf("%s ", argv[i]);
-    }
-    printf("Position : %d", *pos);
-}
