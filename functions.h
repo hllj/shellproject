@@ -22,3 +22,5 @@ char *rtrim(char *str, const char *seps);
 char *trim(char *str, const char *seps); 
 
 void print_arguments(int *nparameter, int *concurrent, char *line, char **argv, int *pos);
+
+int executeCD(char* path);

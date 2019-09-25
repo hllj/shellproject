@@ -1,8 +1,0 @@
-total 40
--rw-r--r-- 1 vanhop vanhop  7544 Thg 9 25 00:44 functions.c
--rw-r--r-- 1 vanhop vanhop   646 Thg 9 24 23:53 functions.h
--rwxr-xr-x 1 vanhop vanhop 13568 Thg 9 25 00:44 main
--rw-r--r-- 1 vanhop vanhop    67 Thg 9 22 17:32 main.c
--rw-r--r-- 1 vanhop vanhop   102 Thg 9 22 17:33 makefile
--rw-r----- 1 vanhop vanhop     0 Thg 9 25 00:44 out.txt
--rw-r--r-- 1 vanhop vanhop    85 Thg 9 22 17:32 README.md

@@ -2,6 +2,7 @@
 #include "functions.h"
 
 #define MAXLINE 80 /* The maximum length command */
+#define BUFFSIZE 1000
 
 void parse(int *nparameter, int *concurrent, char *line, char **argv, int *pos)
 {
@@ -210,6 +211,11 @@ void executeHistoryBuff(char *historybuff) {
     return; 
 }
 
+int executeCD(char* path){
+    printf("%s\n", path);
+    return chdir(path);
+}
+
 void runshell() {
     int nparameter;
     int concurrent;
@@ -232,6 +238,16 @@ void runshell() {
         parse(&nparameter, &concurrent, line, argv, &pos);
         // print_arguments(&nparameter, &concurrent, line, argv, &pos);
         // exit(0);
+        if (strcmp(argv[0], "cd") == 0){
+            char dir[1000];
+            strcpy(dir, argv[1]);
+            if (strcmp(dir, "~") == 0) {
+                strcpy(dir, getenv("HOME"));
+            }
+            if (executeCD(dir) < 0)
+                printf("cd: %s: No such file or directory\n", argv[1]);
+            continue;
+        }
         if (strcmp(argv[0], "!!") == 0) {
             executeHistoryBuff(historybuff);
             continue;
