@@ -234,6 +234,7 @@ void runshell() {
         fgets(line, MAXLINE, stdin);                              
         trim(line, NULL);
         
+        if (strcmp(line, "") == 0) continue;
         // Save another line command before parsed into argv
         strcpy(buffline, line);     
          
