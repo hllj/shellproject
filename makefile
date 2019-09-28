@@ -1,5 +1,10 @@
-#makefile 
+#makefile
 CC = gcc
-main: main.c functions.c 
-	$(CC) $(CFLAGS) $? $(LDFLAGS) -o $@
-clear: rm -f main
+all:main.o functions.o
+	$(CC) -o main main.o functions.o
+main.o:main.c
+	$(CC) -c main.c
+functions.o:functions.c
+	$(CC) -c functions.c
+clear: 
+	rm -f *.o all
